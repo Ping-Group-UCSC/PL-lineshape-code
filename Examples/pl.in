@@ -1,0 +1,12 @@
+path_to_qe = HigherThresh 
+smear = 0.006
+zpl = 1.945
+#tolerance = 0.5e-18
+#skfile = ../Data/2x2x2_paper_sk.csv
+
+
+# yet to implement the below
+##uncomment to change default
+# pre_gs   = 'relax-gs/relax'
+# pre_es   = 'relax-cdftup1/relax'
+# dyn_file = 'relax-gs/PH/dynmat.mold' 
