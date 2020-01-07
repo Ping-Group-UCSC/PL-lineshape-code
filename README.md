@@ -10,7 +10,7 @@ This code calculates the PL spectrum as in the article:
 Prerequisites:
 ------------------------------------
 * [Python](https://www.python.org/downloads)
-* python packages: numpy, matplotlib, scipy, astropy. To install:
+* python packages: [numpy](https://numpy.org), [matplotlib](https://matplotlib.org), [scipy](https://www.scipy.org), [astropy](https://www.astropy.org). To install with pip:
     ```bash
     pip install <package name>
     ```
@@ -36,5 +36,6 @@ Flow of the PL Code:
 Author(s)
 ------------------------------------
 Anikeya Aditya - initial jupyter notebook
+
 Tyler J. Smart  - revised and reorganized code
 
