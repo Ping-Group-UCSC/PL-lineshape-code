@@ -18,7 +18,7 @@ Instructions:
 -----------------------------------
 0. In this folder all steps above have already been executed. Please return to the root of the example `Examples/NV-Diamond`.
 
-1. Run the pl calculation. Note running the pl code without a speicified input file results in several default settings. (Note that minimally one can simply execute `../../code/main.py`, the command below is good for running the calculation and wishing to save the output to file while also viewing the progress in the console.)
+1. Run the pl calculation. Note running the pl code without a specified input file results in several default settings. (Note that minimally one can simply execute `../../code/main.py`, the command below is good for running the calculation and wishing to save the output to file while also viewing the progress in the console.)
 
 ```bash
 python3 -u ../../code/main.py | tee pl.out
