@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
-import scipy
+from scipy import integrate, special
 from numpy import sqrt, exp, pi, cos, sin
 
 from chem_utils import f_Element_Symbol_to_Mass
@@ -115,7 +115,7 @@ def S_t(t, smear, wk, sk):
     s_t = 0
     for w_k, s_k in zip(wk, sk):
         g_k = exp(-0.5 * (w_s * t) ** 2) * (cos(w_k * t) - 1j * sin(w_k * t))
-        e_k = 0.5 * scipy.special.erfc(1 / sqrt(2) * (1j * w_s * t - w_k / w_s))
+        e_k = 0.5 * special.erfc(1 / sqrt(2) * (1j * w_s * t - w_k / w_s))
         s_t += s_k * g_k * e_k
     return np.real(s_t), np.imag(s_t)
 
@@ -161,7 +161,7 @@ def A1_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance):
         A(ZPL - E) = 1/2pi Int[ exp(-gamma*|t|)*(Re(G(t))*cos(E*t/hbar) - Im(G(t))*sin(E*t/hbar)) ] dt
     also the limits of -inf and +inf are replaces with 'limit' where 'limit' may be replaces with ~ 3.5E-13    
     """
-    return scipy.integrate.romberg(
+    return integrate.romberg(
         A1_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance
     )
 

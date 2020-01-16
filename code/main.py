@@ -1,6 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
+import signal # for handling ctrl-c
+import sys
 import os
 import numpy as np
 import time
@@ -11,13 +13,20 @@ from libcalc import readSk_qe, S_t, A1_hw, G_t, gen_hw_list
 from libplot import plotS_hw, plotS_t, plotG_t, plotA1_hw
 from inp_out import read_input
 
-import anikeya as ak
+
+def handler(signal_received, frame):
+    # Handle any cleanup here
+    sys.stderr.write('\nSIGINT or CTRL-C detected. Exiting gracefully\n')
+    sys.exit(1)
 
 
 def main():
     """
     main program
     """
+
+    # call handler if SIGINT or ctrl-c received
+    signal.signal(signal.SIGINT, handler)
 
     plot_flag = True
 
@@ -38,9 +47,7 @@ def main():
     else:
         print("%s Zero-Phonon Line read from input file" % indent)
         zpl = 1.945 * Electron2Coulomb
-    print("%s ZPL = %10.6f" % (indent, (zpl / Electron2Coulomb)))
-
-    print()
+    print("%s ZPL = %10.6f\n" % (indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
     if skfile == None:
@@ -73,7 +80,6 @@ def main():
     print("\nCalculating A(ZPL - E)")
 
     calc_a1_flag = True
-    calc_anikeya_flag = False
     if calc_a1_flag or not os.path.exists("pl.dat"):
 
         hw_array = gen_hw_list(0, 2.1, 300)
@@ -84,11 +90,6 @@ def main():
             for x, y in zip(hw_array / Electron2Coulomb, pl_norm):
                 f.write("%10.6e%s%10.6e\n" % (x, indent, y))
 
-    elif calc_anikeya_flag:
-        hw_array = gen_hw_list(0, 2.1, 300)
-        hwk = wk * hbar_Js
-        pl_norm = ak.calcPL(hw_array, zpl, sk, hwk, "ak_pl.dat")
-
     else:
         # read data from pl.dat
         with open("pl.dat", "r") as f:
@@ -97,9 +98,6 @@ def main():
             )
         with open("pl.dat", "r") as f:
             pl_norm = np.array([float(line.split()[1]) for line in f.readlines()])
-
-    # if not calc_anikeya_flag:
-    #     w3a1 = [hw ** 3 * a for hw, a in zip(hw_array, a1)]
 
     plotA1_hw(hw_array, pl_norm)
 
