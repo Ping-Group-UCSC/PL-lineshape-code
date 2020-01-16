@@ -9,8 +9,8 @@ import time
 
 from constant import indent, Electron2Coulomb, hbar_Js
 from libread import read_ZPL
-from libcalc import readSk_qe, S_t, A1_hw, G_t, gen_hw_list
-from libplot import plotS_hw, plotS_t, plotG_t, plotA1_hw
+from libcalc import readSk_qe, S_t, A_hw, G_t, gen_hw_list
+from libplot import plotS_hw, plotS_t, plotG_t, plotA_hw
 from inp_out import read_input
 
 
@@ -42,12 +42,12 @@ def main():
     dyn_file = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
 
     if zpl == None:
-        print("%s Zero-Phonon Line calculated from QE output")
+        print( "Zero-Phonon Line calculated from QE output".format(indent) )
         zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
     else:
-        print("%s Zero-Phonon Line read from input file" % indent)
+        print( "Zero-Phonon Line read from input file".format(indent) )
         zpl = 1.945 * Electron2Coulomb
-    print("%s ZPL = %10.6f\n" % (indent, (zpl / Electron2Coulomb)))
+    print( "{} ZPL = {:10.6f}\n".format( indent, (zpl / Electron2Coulomb) ) )
 
     # calc wk and sk or read it from a file
     if skfile == None:
@@ -73,18 +73,17 @@ def main():
     plotS_t(smear, wk, sk) if plot_flag else None
 
     # G(t -> inf)
-    print("G(t->inf) = %10.6f + %10.6f i" % (G_t(1e-12, smear, wk, sk, hr)))
+    print(indent, "G(t->inf) = %10.6f + %10.6f i" % (G_t(1e-12, smear, wk, sk, hr)))
     plotG_t(smear, wk, sk, hr) if plot_flag else None
 
     # main routine to compute final spectral function
     print("\nCalculating A(ZPL - E)")
 
-    calc_a1_flag = True
-    if calc_a1_flag or not os.path.exists("pl.dat"):
-
+    if not os.path.exists("pl.dat"):
+        # calculate pl and save to pl.dat
         hw_array = gen_hw_list(0, 2.1, 300)
         print(indent, "time now: ", time.time() - start_time, " sec")
-        _, _, pl_norm = A1_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance)
+        _, _, pl_norm = A_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance)
         print(indent, "time now: ", time.time() - start_time, " sec")
         with open("pl.dat", "w") as f:
             for x, y in zip(hw_array / Electron2Coulomb, pl_norm):
@@ -99,9 +98,12 @@ def main():
         with open("pl.dat", "r") as f:
             pl_norm = np.array([float(line.split()[1]) for line in f.readlines()])
 
-    plotA1_hw(hw_array, pl_norm)
+    print( "\n{}PL calculation finished".format(indent) )
 
-    print()
+    print( "\n{}Data saved to 'pl.dat' and plot saved to 'pl.png'".format(indent) )
+    plotA_hw(hw_array, pl_norm)
+
+    print("\nDone!")
     return None
 
 

@@ -54,16 +54,20 @@ class inp_class:
 
     def print_contents(self):
         E2C = Electron2Coulomb
-        print("%s path_to_qe   = %s" % (2 * indent, self.path_to_qe))
-        print("%s zpl (eV)     = %s" % (2 * indent, str(self.zpl / E2C)))
-        print("%s skfile       = %s" % (2 * indent, self.skfile))
-        print("%s smear (eV)   = %s" % (2 * indent, str(self.smear / E2C)))
-        print("%s limit (s)    = %s" % (2 * indent, str(self.limit)))
-        print("%s gamma (s^-1) = %s" % (2 * indent, str(self.gamma)))
-        print("%s tolerance    = %s" % (2 * indent, str(self.tolerance)))
-        print("%s hw_min (eV)  = %s" % (2 * indent, str(self.hw_min / E2C)))
-        print("%s hw_min (eV)  = %s" % (2 * indent, str(self.hw_max / E2C)))
-        print("%s hw_steps     = %s" % (2 * indent, str(self.hw_steps)))
+        print( "{} path_to_qe   = {}".format(2 * indent, self.path_to_qe) )
+        # if 'zpl' in vars():
+        #     print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
+        # else:
+        #     print( "{} zpl (eV)     = {}".format(2 * indent, "from input") )
+        print( "{} skfile       = {}".format(2 * indent, self.skfile) )
+        print( "{} smear (eV)   = {:10.6e}".format(2 * indent, self.smear / E2C) )
+        print( "{} limit (s)    = {:10.6e}".format(2 * indent, self.limit) )
+        print( "{} gamma (s^-1) = {:10.6e}".format(2 * indent, self.gamma) )
+        print( "{} tolerance    = {:10.6e}".format(2 * indent, self.tolerance) )
+        print( "{} hw_min (eV)  = {:10.6f}".format(2 * indent, self.hw_min / E2C) )
+        print( "{} hw_min (eV)  = {:10.6f}".format(2 * indent, self.hw_max / E2C) )
+        print( "{} hw_steps     = {}".format(2 * indent, int(self.hw_steps)) )
+        print()
 
 
 def read_input():
@@ -83,7 +87,7 @@ def read_input():
         # update inp
         inp = parse_input(lines, inp)
     else:
-        print("No '%s': Default parameters are assumed" % filein)
+        print( "{} No '{}': Default parameters are assumed".format(indent, filein) )
 
     inp.print_contents()
 

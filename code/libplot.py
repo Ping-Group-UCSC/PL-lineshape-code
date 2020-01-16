@@ -29,7 +29,9 @@ def plotS_hw(smear, wk, sk):
     # plot data
     plt.plot(xvals, yvals, "#0044BB")
     plt.ylabel("$S(\hbar\omega)$ (1/meV)"), plt.xlabel("$\hbar\omega$ (meV)")
-    plt.show()
+    # plt.show()
+    plt.savefig('S_hw.png')
+    plt.close()
     return None
 
 
@@ -49,7 +51,9 @@ def plotS_t(smear, wk, sk):
     plt.plot(xvals, yvals_re, "#FF0000", label="Re($S(t)$)")
     plt.plot(xvals, yvals_im, "#222222", label="Im($S(t)$)")
     plt.ylabel("$S(t)$"), plt.xlabel("$t$ (s)"), plt.legend()
-    plt.show()
+    # plt.show()
+    plt.savefig('S_t.png')
+    plt.close()
     return None
 
 
@@ -69,11 +73,13 @@ def plotG_t(smear, wk, sk, hr):
     plt.plot(xvals, yvals_re, "#FF0000", label="Re($G(t)$)")
     plt.plot(xvals, yvals_im, "#222222", label="Im($G(t)$)")
     plt.ylabel("$G(t)$"), plt.xlabel("$t$ (s)"), plt.legend()
-    plt.show()
+    # plt.show()
+    plt.savefig('G_t.png')
+    plt.close()
     return None
 
 
-def plotA1_hw(xvals, yvals):
+def plotA_hw(xvals, yvals):
     """
     method for plotting g_t
     """
@@ -84,7 +90,9 @@ def plotA1_hw(xvals, yvals):
     plt.plot(xvals, yvals, "#7434EB")
     plt.ylabel("$A(ZPL-E)$"), plt.xlabel("$E$ (eV)")
     plt.xlim(1.5, 1.96)
-    plt.show()
+    # plt.show()
+    plt.savefig('pl.png')
+    plt.close()
     return None
 
 

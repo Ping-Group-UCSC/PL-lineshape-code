@@ -141,7 +141,7 @@ Begin spectral function methods
 """
 
 
-def A1_integrand(t, hw, smear, wk, sk, hr, gamma):
+def A_integrand(t, hw, smear, wk, sk, hr, gamma):
     """
     computes integrand:
         exp(-gamma*|t|)*(Re(G(t))*cos(E*t/hbar) - Im(G(t))*sin(E*t/hbar))
@@ -152,7 +152,7 @@ def A1_integrand(t, hw, smear, wk, sk, hr, gamma):
     )
 
 
-def A1_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance):
+def A_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance):
     """
     method for calculating PL as:
         A(ZPL - E) = 1/2pi Int[ G(t) exp(iwt - gamma*|t|) ] dt
@@ -162,25 +162,25 @@ def A1_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance):
     also the limits of -inf and +inf are replaces with 'limit' where 'limit' may be replaces with ~ 3.5E-13    
     """
     return integrate.romberg(
-        A1_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance
+        A_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance
     )
 
 
-def A1_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance):
+def A_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance):
     """
-    method for gathering A1(E) 
+    method for gathering A(hw) 
     returns list a1e
     """
     de_array = zpl - hw_array
-    a1_hw = np.array(
-        [A1_integral(de, limit, smear, wk, sk, hr, gamma, tolerance) for de in de_array]
+    A_hw = np.array(
+        [A_integral(de, limit, smear, wk, sk, hr, gamma, tolerance) for de in de_array]
     )
 
-    pl_hw = (hw_array ** 3 / hbar_Js ** 3) * a1_hw
+    pl_hw = (hw_array ** 3 / hbar_Js ** 3) * A_hw
     pl_min, pl_max = min(pl_hw), max(pl_hw)
     pl_hw_norm = (pl_hw - min(pl_hw)) / (max(pl_hw) - min(pl_hw))
 
-    return a1_hw, pl_hw, pl_hw_norm
+    return A_hw, pl_hw, pl_hw_norm
 
 
 """

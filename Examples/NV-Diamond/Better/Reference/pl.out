@@ -1,0 +1,30 @@
+
+Beginning Calculation and reading input
+         path_to_qe   = ..
+         skfile       = None
+         smear (eV)   = 0.006
+         limit (s)    = 1e-12
+         gamma (s^-1) = 2900000000000.0
+         tolerance    = 1e-18
+         hw_min (eV)  = 0.0
+         hw_min (eV)  = 2.0
+         hw_steps     = 600.0
+
+Zero-Phonon Line read from input file
+     ZPL =   1.945000
+
+Calculating Sk
+     Read dynmat mold from ../relax-gs/PH/dynmat.mold
+     Huang-Rhys factor =   2.199241
+     S(t->0) == HR?   True
+     G(t->inf) =   0.110887 +  -0.000000 i
+
+Calculating A(ZPL - E)
+     time now:  10.942595958709717  sec
+     time now:  2340.629861831665  sec
+
+    PL calculation finished
+
+    Data saved to 'pl.dat' and plot saved to 'pl.png'
+
+Done!
