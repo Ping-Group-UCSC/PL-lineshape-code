@@ -71,10 +71,10 @@ Calculating A(ZPL - E)
 6. This integration will take approximately 45 minutes, and afterwards a final PL spectra will be produced with the data saved in `pl.dat` and plot saved to `pl.png`
 
 
-7. Enter `Better` and run another calculation but this time specifying an input file `pl.in`. The code will automatically the code will read from its contents. Then run the code again.
+7. Enter `Better` and run another calculation but this time specifying an input file `pl.in`. The code will automatically the code will read from its contents.
 
 ```bash
-cd HigherThresh
+cd Better
 python3 -u ../../../code/main.py | tee pl.out
 ```
 
