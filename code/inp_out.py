@@ -65,7 +65,7 @@ class inp_class:
         print( "{} gamma (s^-1) = {:10.6e}".format(2 * indent, self.gamma) )
         print( "{} tolerance    = {:10.6e}".format(2 * indent, self.tolerance) )
         print( "{} hw_min (eV)  = {:10.6f}".format(2 * indent, self.hw_min / E2C) )
-        print( "{} hw_min (eV)  = {:10.6f}".format(2 * indent, self.hw_max / E2C) )
+        print( "{} hw_max (eV)  = {:10.6f}".format(2 * indent, self.hw_max / E2C) )
         print( "{} hw_steps     = {}".format(2 * indent, int(self.hw_steps)) )
         print()
 

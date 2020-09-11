@@ -32,6 +32,11 @@ def plotS_hw(smear, wk, sk):
     # plt.show()
     plt.savefig('S_hw.png')
     plt.close()
+
+    # messy but need to dumpy this!
+    dump = np.array([xvals, yvals]).T
+    np.savetxt('S_hw.dat', dump)
+    
     return None
 
 

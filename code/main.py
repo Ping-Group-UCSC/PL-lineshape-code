@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import signal # for handling ctrl-c
+import signal  # for handling ctrl-c
 import sys
 import os
 import numpy as np
@@ -42,17 +42,19 @@ def main():
     dyn_file = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
 
     if zpl == None:
-        print( "Zero-Phonon Line calculated from QE output".format(indent) )
+        print("Zero-Phonon Line calculated from QE output".format(indent))
         zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
     else:
-        print( "Zero-Phonon Line read from input file".format(indent) )
+        print("Zero-Phonon Line read from input file".format(indent))
         zpl = 1.945 * Electron2Coulomb
-    print( "{} ZPL = {:10.6f}\n".format( indent, (zpl / Electron2Coulomb) ) )
+    print("{} ZPL = {:10.6f}\n".format(indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
     if skfile == None:
         print("Calculating Sk")
         _, wk, _, sk = readSk_qe(pre_gs, pre_es, dyn_file)
+        # np.savetxt('sk.dat', np.array([wk, sk]).T)
+        np.savetxt('sk.dat', np.array([wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)
     else:
         if os.path.exists(skfile):
             print("Reading Sk")
@@ -60,7 +62,8 @@ def main():
             print("Error: routine to read skfile not yet implemented")
             pass
         else:
-            raise Exception("Error: the file " + str(skfile) + " does not exist")
+            raise Exception("Error: the file " +
+                            str(skfile) + " does not exist")
 
     # calc HR factor; plot S(hw)
     hr = sum(sk)
@@ -73,7 +76,8 @@ def main():
     plotS_t(smear, wk, sk) if plot_flag else None
 
     # G(t -> inf)
-    print(indent, "G(t->inf) = %10.6f + %10.6f i" % (G_t(1e-12, smear, wk, sk, hr)))
+    print(indent, "G(t->inf) = %10.6f + %10.6f i" %
+          (G_t(1e-12, smear, wk, sk, hr)))
     plotG_t(smear, wk, sk, hr) if plot_flag else None
 
     # main routine to compute final spectral function
@@ -83,7 +87,8 @@ def main():
         # calculate pl and save to pl.dat
         hw_array = gen_hw_list(0, 2.1, 300)
         print(indent, "time now: ", time.time() - start_time, " sec")
-        _, _, pl_norm = A_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance)
+        _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
+                             wk, sk, hr, gamma, tolerance)
         print(indent, "time now: ", time.time() - start_time, " sec")
         with open("pl.dat", "w") as f:
             for x, y in zip(hw_array / Electron2Coulomb, pl_norm):
@@ -93,14 +98,16 @@ def main():
         # read data from pl.dat
         with open("pl.dat", "r") as f:
             hw_array = np.array(
-                [float(line.split()[0]) * Electron2Coulomb for line in f.readlines()]
+                [float(line.split()[0]) *
+                 Electron2Coulomb for line in f.readlines()]
             )
         with open("pl.dat", "r") as f:
-            pl_norm = np.array([float(line.split()[1]) for line in f.readlines()])
+            pl_norm = np.array([float(line.split()[1])
+                                for line in f.readlines()])
 
-    print( "\n{}PL calculation finished".format(indent) )
+    print("\n{}PL calculation finished".format(indent))
 
-    print( "\n{}Data saved to 'pl.dat' and plot saved to 'pl.png'".format(indent) )
+    print("\n{}Data saved to 'pl.dat' and plot saved to 'pl.png'".format(indent))
     plotA_hw(hw_array, pl_norm)
 
     print("\nDone!")
