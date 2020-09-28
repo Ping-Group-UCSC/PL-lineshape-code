@@ -41,7 +41,7 @@ def main():
     pre_es = os.path.join(path_to_qe, "relax-cdftup1/relax")
     dyn_file = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
 
-    if zpl == None:
+    if zpl is None:
         print("Zero-Phonon Line calculated from QE output".format(indent))
         zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
     else:
@@ -50,7 +50,7 @@ def main():
     print("{} ZPL = {:10.6f}\n".format(indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
-    if skfile == None:
+    if skfile is None:
         print("Calculating Sk")
         _, wk, _, sk = readSk_qe(pre_gs, pre_es, dyn_file)
         # np.savetxt('sk.dat', np.array([wk, sk]).T)

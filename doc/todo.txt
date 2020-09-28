@@ -1,0 +1,15 @@
+definite issue:
+[X] S(hw) currently cutoff at 200 meV
+
+Three main things:
+[X] Hard coded numbers diamond but not necessarily for other
+[X] Integration -> very slow but its not clear converging
+[X] Input file -> easier to use (yaml)
+
+[X] = Not done
+[√] = Done
+
+Goals:
+[X] CBCN or C2CN PL spectra
+[X] Easier to use, eliminating hard-coded numbers
+[X] Faster, right now 40 minutes, down to 1 minute?
