@@ -88,7 +88,7 @@ def main():
         hw_array = gen_hw_list(0, 2.1, 300)
         print(indent, "time now: ", time.time() - start_time, " sec")
         _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
-                             wk, sk, hr, gamma, tolerance)
+                             wk, sk, hr, gamma, tolerance, integrate_method="romberg")
         print(indent, "time now: ", time.time() - start_time, " sec")
         with open("pl.dat", "w") as f:
             for x, y in zip(hw_array / Electron2Coulomb, pl_norm):
