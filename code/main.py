@@ -54,7 +54,8 @@ def main():
         print("Calculating Sk")
         _, wk, _, sk = readSk_qe(pre_gs, pre_es, dyn_file)
         # np.savetxt('sk.dat', np.array([wk, sk]).T)
-        np.savetxt('sk.dat', np.array([wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)
+        np.savetxt('sk.dat', np.array(
+            [wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)
     else:
         if os.path.exists(skfile):
             print("Reading Sk")
@@ -116,23 +117,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-"""
-
-At this point everything is in place to read QE and compute Sk
-to-do:
-    plotS_t routine
-    calc g(t)
-    calc a1(t)
-    integrate a1(t)
-    
-    
-    Other:
-        export methods for Sk, S(t), G(t), A(E)
-        function to export Sk (sorted?); significance of high Sk modes?
-        read in Sk
-        combine sk and wk?? may be easier and cleaner
-        smear simply global i.e. defined in constants, then imported but can be changed via a method?
-            -> also gamma, and hr, zpl (pros/cons to this)
-
-"""

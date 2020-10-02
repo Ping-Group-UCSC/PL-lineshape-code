@@ -60,7 +60,7 @@ def calc_qk_part(k, list_delta, list_delta_r):
 
 def Sk(wk, qk):
     """
-    calc sk = wk*qk^2/(2*hbar) 
+    calc sk = wk*qk^2/(2*hbar)
     sk is unitless: [wk] = Hz, [qk] = kg^(1/2)*m, [hbar] = J*s
     returns array of sk's
     """
@@ -106,7 +106,7 @@ def S_t(t, smear, wk, sk):
         G_k     = exp(-i*wk*t - 0.5*(ws*t)**2)
         E_k     = 0.5*erfc(1/sqrt(2)*(i*ws*t-wk/ws))
     returns tuple: real(s_t), imag(s_t)
-    
+
     Below G_k is expanded into real and imaginary parts:
         G_k     = exp(-0.5*(ws*t)**2)*(cos(wk*t)-i*sin(wk*t))
     """
@@ -159,14 +159,14 @@ def A_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method=
     where the limits of integration are -inf to +inf
     here we compute only the real part (imaginary defined in seperate function is zero):
         A(ZPL - E) = 1/2pi Int[ exp(-gamma*|t|)*(Re(G(t))*cos(E*t/hbar) - Im(G(t))*sin(E*t/hbar)) ] dt
-    also the limits of -inf and +inf are replaces with 'limit' where 'limit' may be replaces with ~ 3.5E-13    
+    also the limits of -inf and +inf are replaces with 'limit' where 'limit' may be replaces with ~ 3.5E-13
     """
     if integrate_method == "quad_vec":
-        f = lambda t: A_integrand(t, hw, smear, wk, sk, hr, gamma)
+        def f(t): return A_integrand(t, hw, smear, wk, sk, hr, gamma)
         y, err = integrate.quad_vec(f, -limit, limit)
     elif integrate_method == "romberg":
         y = integrate.romberg(
-            A_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance
+            A_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance, vec_func=True
         )
     else:
         print("integrate_method only supports quad_vec and romberg")
@@ -175,19 +175,20 @@ def A_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method=
 
 def A_hw(hw_array, zpl, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method="quad_vec"):
     """
-    method for gathering A(hw) 
+    method for gathering A(hw)
     returns list a1e
     """
     de_array = zpl - hw_array
     if integrate_method == "quad_vec":
-        A_hw = A_integral(de_array, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method)
+        A_hw = A_integral(de_array, limit, smear, wk, sk, hr,
+                          gamma, tolerance, integrate_method)
     elif integrate_method == "romberg":
         A_hw = np.array(
-            [A_integral(de, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method) for de in de_array]
+            [A_integral(de, limit, smear, wk, sk, hr, gamma,
+                        tolerance, integrate_method) for de in de_array]
         )
 
     pl_hw = (hw_array ** 3 / hbar_Js ** 3) * A_hw
-    pl_min, pl_max = min(pl_hw), max(pl_hw)
     pl_hw_norm = (pl_hw - min(pl_hw)) / (max(pl_hw) - min(pl_hw))
 
     return A_hw, pl_hw, pl_hw_norm
