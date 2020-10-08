@@ -25,7 +25,8 @@ class inp_class:
     # limit used in integral, units of s
     limit = 3.5e-13
     # gamma factor in PL, units of s^-1
-    gamma = 0.28571428571e13
+    # gamma = 0.28571428571e13
+    gamma = 0.28571428571e14
     # improves accuracy of integral, unitless
     tolerance = 1e-18
     # min energy for PL spectrum
