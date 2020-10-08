@@ -69,12 +69,13 @@ def main():
     # calculate IPR
     modes = np.arange(0, len(list_delta_r))
     ipr = np.zeros(len(modes))
-    ipr_file = open("ipr.dat", "w")
-    ipr_file.write("mode    phonon energy (meV)    IPR\n")
-    for k in modes:
-        ipr[k] = inv_part_ratio(k, list_delta_r)
-        ipr_file.write("{:03d}         {:.6f}          {:.6f}\n"
-            .format(k, wk[k] * hbar_Js / Electron2Coulomb * 1e3, ipr[k]))
+    with open("ipr.dat", "w") as ipr_file:
+        ipr_file.write("# mode    phonon energy (meV)    IPR\n")
+        for k in modes:
+            ipr[k] = inv_part_ratio(k, list_delta_r)
+            ipr_file.write("{:03d}         {:.6f}          {:.6f}\n"
+                           .format(k, wk[k] * hbar_Js / Electron2Coulomb * 1e3, ipr[k]))
+    print("%s Inverse Participation Ratios saved to ipr.dat" % (indent))
 
     # calc HR factor; plot S(hw)
     hr = sum(sk)

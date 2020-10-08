@@ -250,12 +250,13 @@ def inv_part_ratio(k, list_delta_r):
     localized. If, e.g., only one atom vibrates for a given mode, IPR = 1
     """
     vec = np.array(list_delta_r[k])
-    #print(vec)
     vec_norm = np.linalg.norm(vec, axis=1)
     part_ratio_per_atom = vec_norm**2
     part_ratio = np.sum(part_ratio_per_atom**2)
     inv_part_ratio = 1/part_ratio
     return inv_part_ratio
+
+
 """
 End extra methods
 """
