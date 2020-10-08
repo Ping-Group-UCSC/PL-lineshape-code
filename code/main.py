@@ -9,7 +9,7 @@ import time
 
 from constant import indent, Electron2Coulomb, hbar_Js
 from libread import read_ZPL
-from libcalc import readSk_qe, S_t, A_hw, G_t, gen_hw_list
+from libcalc import readSk_qe, S_t, A_hw, G_t, gen_hw_list, inv_part_ratio
 from libplot import plotS_hw, plotS_t, plotG_t, plotA_hw
 from inp_out import read_input
 
@@ -52,7 +52,7 @@ def main():
     # calc wk and sk or read it from a file
     if skfile is None:
         print("Calculating Sk")
-        _, wk, _, sk = readSk_qe(pre_gs, pre_es, dyn_file)
+        _, wk, _, sk, list_delta_r = readSk_qe(pre_gs, pre_es, dyn_file)
         # np.savetxt('sk.dat', np.array([wk, sk]).T)
         np.savetxt('sk.dat', np.array(
             [wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)
@@ -65,6 +65,16 @@ def main():
         else:
             raise Exception("Error: the file " +
                             str(skfile) + " does not exist")
+
+    # calculate IPR
+    modes = np.arange(0, len(list_delta_r))
+    ipr = np.zeros(len(modes))
+    ipr_file = open("ipr.dat", "w")
+    ipr_file.write("mode    phonon energy (meV)    IPR\n")
+    for k in modes:
+        ipr[k] = inv_part_ratio(k, list_delta_r)
+        ipr_file.write("{:03d}         {:.6f}          {:.6f}\n"
+            .format(k, wk[k] * hbar_Js / Electron2Coulomb * 1e3, ipr[k]))
 
     # calc HR factor; plot S(hw)
     hr = sum(sk)

@@ -85,7 +85,7 @@ def readSk_qe(pre_gs, pre_es, dyn_file):
     qk = calc_qk(vecR, list_pos_i, list_pos_f, list_delta_r)
     # print(qk)
     sk = Sk(wk, qk)
-    return nat, wk, qk, sk
+    return nat, wk, qk, sk, list_delta_r
 
 
 """
@@ -243,6 +243,19 @@ def gen_hw_list(hw_min, hw_max, steps):
     return np.arange(hw_min, hw_max, dhw)
 
 
+def inv_part_ratio(k, list_delta_r):
+    """
+    inverse partial ratio for mode k
+    measures the number of atoms onto which the vibrational mode is
+    localized. If, e.g., only one atom vibrates for a given mode, IPR = 1
+    """
+    vec = np.array(list_delta_r[k])
+    #print(vec)
+    vec_norm = np.linalg.norm(vec, axis=1)
+    part_ratio_per_atom = vec_norm**2
+    part_ratio = np.sum(part_ratio_per_atom**2)
+    inv_part_ratio = 1/part_ratio
+    return inv_part_ratio
 """
 End extra methods
 """
