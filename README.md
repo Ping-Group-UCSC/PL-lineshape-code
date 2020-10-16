@@ -15,27 +15,15 @@ Prerequisites:
     pip install <package name>
     ```
 
-<!-- Quick Setup:
-------------------------------------
-    ./configure [options]
-(will link executable in `./bin/`) -->
-
 Examples:
 ------------------------------------
 Try out the example calculations under the directory `./Examples/`
 *will add detail*
 
-Help:
-------------------------------------
-*will add detail*
-
-Flow of the PL Code:
-------------------------------------
-*will add detail*
-
 Author(s)
 ------------------------------------
-Anikeya Aditya - initial jupyter notebook
+Anikeya Aditya
 
-Tyler J. Smart  - revised and reorganized code
+Tyler J. Smart
 
+Kejun Li
