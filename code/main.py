@@ -97,7 +97,7 @@ def main():
 
     if not os.path.exists("pl.dat"):
         # calculate pl and save to pl.dat
-        hw_array = gen_hw_list(0, 2.1, 300)
+        hw_array = gen_hw_list(1.0, 2.1, 600)
         print(indent, "time now: ", time.time() - start_time, " sec")
         _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
                              wk, sk, hr, gamma, tolerance, integrate_method="romberg")
