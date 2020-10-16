@@ -99,6 +99,8 @@ def read_cell_and_pos_qe(prefix):
             if (line.startswith("Begin final coordinates")):
                 i_start = i + 1
                 break
+            elif (line.startswith("ATOMIC_POSITIONS")):
+                i_start = i - 1
 
         if (i_start is None):
             print("Not relax calculation, skip .out file")
@@ -129,7 +131,7 @@ def read_cell_and_pos_qe(prefix):
             while (True):
                 i += 1
                 line = lines[i]
-                if (line.startswith("End")):
+                if (line.startswith("End")) or (line.strip() == ''):
                     break
                 ar = line.split()
                 pos = np.asarray([float(x) for x in ar[1:]])
