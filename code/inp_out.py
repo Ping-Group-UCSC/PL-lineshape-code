@@ -23,10 +23,12 @@ class inp_class:
     # smearing for S(hw), units eV (converted to Joules)
     smear = 0.006 * Electron2Coulomb
     # limit used in integral, units of s
-    limit = 3.5e-13
+    # limit = 3.5e-13
+    limit = 5e-13
     # gamma factor in PL, units of s^-1
     # gamma = 0.28571428571e13
-    gamma = 0.28571428571e14
+    # gamma = 0.28571428571e14
+    gamma = 1.0e13
     # improves accuracy of integral, unitless
     tolerance = 1e-18
     # min energy for PL spectrum

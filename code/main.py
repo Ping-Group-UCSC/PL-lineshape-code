@@ -46,7 +46,11 @@ def main():
         zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
     else:
         print("Zero-Phonon Line read from input file".format(indent))
-        zpl = 1.945 * Electron2Coulomb
+        print("Enter Zero-Phonon Line (eV):")
+        zpl = input()
+        zpl = float(zpl)
+        zpl_ev = zpl
+        zpl *= Electron2Coulomb
     print("{} ZPL = {:10.6f}\n".format(indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
@@ -97,7 +101,7 @@ def main():
 
     if not os.path.exists("pl.dat"):
         # calculate pl and save to pl.dat
-        hw_array = gen_hw_list(1.0, 2.1, 600)
+        hw_array = gen_hw_list(zpl_ev-1.0, zpl_ev+0.15, 600)
         print(indent, "time now: ", time.time() - start_time, " sec")
         _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
                              wk, sk, hr, gamma, tolerance, integrate_method="romberg")

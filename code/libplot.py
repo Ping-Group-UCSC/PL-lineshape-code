@@ -94,7 +94,7 @@ def plotA_hw(xvals, yvals):
 
     plt.plot(xvals, yvals, "#7434EB")
     plt.ylabel("$A(ZPL-E)$"), plt.xlabel("$E$ (eV)")
-    plt.xlim(1.5, 1.96)
+    plt.xlim(min(xvals), max(xvals))
     # plt.show()
     plt.savefig('pl.png')
     plt.close()
