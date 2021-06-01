@@ -13,8 +13,8 @@ def plotS_hw(smear, wk, sk):
     """
     # set up plot variables
     xmin = 0
-    xmax = 200
-    dx = int(xmax / 200)
+    xmax = 250
+    dx = int(xmax / 250)
     # generate data
     xvals = np.array(range(xmin, xmax, dx))
     yvals = np.array(
