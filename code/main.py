@@ -43,6 +43,7 @@ def main():
 
     if zpl is None:
         print("Zero-Phonon Line calculated from QE output".format(indent))
+        zpl_ev = read_ZPL(pre_gs + ".out", pre_es + ".out")
         zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
     else:
         print("Zero-Phonon Line read from input file".format(indent))
