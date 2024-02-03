@@ -2,10 +2,21 @@
 
 import os
 
-from constant import indent, Ry2eV, conv_freq_to_omega
+from constant import indent, Ry2eV, conv_freq_to_omega, THzToCm
 
+def read_dynmat_mold(nat, file, interface='qe'):
+    """
+    interface: 'qe' , or 'phonopy'
+    """
+    if interface=='qe':
+        wk, list_delta_r = read_dynmat_mold_qe(nat, file)
+    elif interface=='phonopy':
+        wk, list_delta_r = read_dynmat_mold_phonopy(file)
+    else:
+        raise ValueError("Interface not implemented")
+    return wk, list_delta_r
 
-def read_dynmat_mold(nat, file):
+def read_dynmat_mold_qe(nat, file):
     """
     Check if file exists and return freq and list_delta_r
     """
@@ -36,6 +47,34 @@ def read_dynmat_mold(nat, file):
                 begin = end + 1
     return wk, list_delta_r
 
+def read_dynmat_mold_phonopy(f_band):
+    """
+    Check if file exists and return freq and list_delta_r
+    f_band:  band.yaml include band information;
+    interfaced with phonopy
+    """
+    #read data from file
+    if os.path.exists(f_band):
+        import yaml
+        with open(f_band, "r") as f:
+            print("Read phonon from", f_band)
+            data = yaml.safe_load(f)
+
+    #read frequency and mode
+    for d in data['phonon']:
+        if d['q-position']==[0.0, 0.0, 0.0]: 
+            #the frequency in phonopy is THz; frequency of qe is cm-1;
+            freq = [band['frequency']*THzToCm for band in d['band']]
+            wk = [fre*conv_freq_to_omega for fre in freq]
+            vec = [band['eigenvector'] for band in data['phonon'][0]['band']] #phonon mode
+            #we keep only the real part;
+            list_delta_r = [
+     [[r_component[0] for r_component in atoms] for atoms in mode ] for mode in vec
+                            ]
+            break
+        raise ValueError("didn't find q=(0,0,0) point")
+        
+    return wk, list_delta_r
 
 def calc_nat_nmodes(lines):
     count_flag = False
