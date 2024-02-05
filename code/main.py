@@ -34,12 +34,10 @@ def main():
 
     print("\nBeginning Calculation and reading input")
     # read input file
-    path_to_qe, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input()
+    path_to_qe, phonon_interface, file_phonon, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input() # Add
     # print(path_to_qe, zpl, skfile, smear)
-
     pre_gs = os.path.join(path_to_qe, "relax-gs/relax")
     pre_es = os.path.join(path_to_qe, "relax-cdftup1/relax")
-    dyn_file = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
 
     if zpl is None:
         print("Zero-Phonon Line calculated from QE output".format(indent))
@@ -52,7 +50,7 @@ def main():
     # calc wk and sk or read it from a file
     if skfile is None:
         print("Calculating Sk")
-        _, wk, _, sk, list_delta_r = readSk_qe(pre_gs, pre_es, dyn_file)
+        _, wk, _, sk, list_delta_r = readSk_qe(pre_gs, pre_es, file_phonon, phonon_interface=phonon_interface)
         # np.savetxt('sk.dat', np.array([wk, sk]).T)
         np.savetxt('sk.dat', np.array(
             [wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)

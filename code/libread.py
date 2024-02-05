@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import yaml
 
 from constant import indent, Ry2eV, conv_freq_to_omega, THzToCm
 
@@ -13,7 +14,7 @@ def read_dynmat_mold(nat, file, interface='qe'):
     elif interface=='phonopy':
         wk, list_delta_r = read_dynmat_mold_phonopy(file)
     else:
-        raise ValueError("Interface not implemented")
+        raise ValueError("Interface {} not implemented".format(interface))
     return wk, list_delta_r
 
 def read_dynmat_mold_qe(nat, file):
@@ -24,6 +25,8 @@ def read_dynmat_mold_qe(nat, file):
         with open(file) as f:
             print(indent, "Read dynmat mold from", file)
             lines = f.readlines()
+    else:
+        raise ValueError("couldn't find phonon file {}".format(file)) 
     #    nat, nmodes = calc_nat_nmodes(lines)
     nmodes = nat * 3
     for i, line in enumerate(lines):
@@ -55,18 +58,19 @@ def read_dynmat_mold_phonopy(f_band):
     """
     #read data from file
     if os.path.exists(f_band):
-        import yaml
         with open(f_band, "r") as f:
             print("Read phonon from", f_band)
-            data = yaml.safe_load(f)
+            ph_data = yaml.safe_load(f)
+    else:
+        raise ValueError("couldn't find phonon file {}".format(f_band))      
 
     #read frequency and mode
-    for d in data['phonon']:
+    for d in ph_data['phonon']:
         if d['q-position']==[0.0, 0.0, 0.0]: 
             #the frequency in phonopy is THz; frequency of qe is cm-1;
             freq = [band['frequency']*THzToCm for band in d['band']]
             wk = [fre*conv_freq_to_omega for fre in freq]
-            vec = [band['eigenvector'] for band in data['phonon'][0]['band']] #phonon mode
+            vec = [band['eigenvector'] for band in ph_data['phonon'][0]['band']] #phonon mode
             #we keep only the real part;
             list_delta_r = [
      [[r_component[0] for r_component in atoms] for atoms in mode ] for mode in vec

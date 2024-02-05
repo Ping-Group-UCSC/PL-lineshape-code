@@ -16,6 +16,10 @@ class inp_class:
     """
     # path to qe output: relax-gs, relax-cdftup1, relax-gs/PH
     path_to_qe = "."
+    # phonon interface = qe or phonopy;
+    phonon_interface = "qe"
+    # phonon file, default is from qe:
+    file_phonon = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
     # zero-phonon line, units eV (converted to Joules)
     zpl = None
     # file to read previously calculated wk, Sk
@@ -44,6 +48,8 @@ class inp_class:
         # return tuple of all inp contents
         return (
             self.path_to_qe,
+            self.phonon_interface,
+            self.file_phonon,
             self.zpl,
             self.skfile,
             self.smear,
@@ -56,6 +62,8 @@ class inp_class:
     def print_contents(self):
         E2C = Electron2Coulomb
         print( "{} path_to_qe   = {}".format(2 * indent, self.path_to_qe) )
+        print( "{} phonon_interface   = {}".format(2 * indent, self.phonon_interface) )
+        print( "{} file_phonon   = {}".format(2 * indent, self.file_phonon))
         # if 'zpl' in vars():
         #     print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
         # else:
@@ -105,6 +113,10 @@ def parse_input(lines, inp):
             arg = line.split()[0]
             if arg == "path_to_qe":
                 inp.path_to_qe = line.split()[2]
+            elif arg == "phonon_interface":
+                inp.phonon_interface = line.split()[2]
+            elif arg == "file_phonon":
+                inp.file_phonon = line.split()[2]
             elif arg == "zpl":
                 inp.zpl = float(line.split()[2]) * Electron2Coulomb
             elif arg == "skfile":
