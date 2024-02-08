@@ -78,3 +78,28 @@ cd Better
 python3 -u ../../../code/main.py | tee pl.out
 ```
 
+-----------------------------------
+New input added:
+- path_gs:
+    
+    The path of ground state calculation. 
+    With qe interface it should be the header of scf or relax file. No “.in” or “.out” included
+    
+    e.g “./relax-gs/scf”, “./relax-gs/relax”
+    
+    With VASP interface it should be the directory path that include the POSCAR or CONTCAR
+    
+- path_ex: path if excited state
+    
+    same as path_gs
+    
+- phonon_interface:
+    
+    the default is qe . if phonopy then use phonopy for the phonon;
+    (Notice we don’t need quote “” for this input)
+    
+- file_phonon:
+    
+    file path of the phonon file. 
+    for qe it should be the paht of dynmat.mold file. e.g “./relax-gs/PH/dynmat.mold”
+    for phonopy it should be the path of band.yaml file. e.g “./phonopy_calc/band.yaml”
