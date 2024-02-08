@@ -21,10 +21,12 @@ def read_cell_and_pos_auto(arg):
     All returned positions are in unit of angstrom
     '''
     if (os.path.exists(arg + ".in")):
+        print("find input file for qe")
         return read_cell_and_pos_qe(arg), "qe"
     elif ("POSCAR" in arg or "CONTCAR" in arg):
         return read_cell_and_pos_poscar(arg), "vasp"
     else:
+        raise ValueError("invalid path {}".format(arg))
         return None, None
 
 def write_cell_and_pos_auto(package, *args, **kwargs):

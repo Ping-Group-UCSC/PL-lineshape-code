@@ -34,10 +34,10 @@ def main():
 
     print("\nBeginning Calculation and reading input")
     # read input file
-    path_to_qe, phonon_interface, file_phonon, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input() # Add
+    path_gs, path_ex, phonon_interface, file_phonon, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input() # Add
     # print(path_to_qe, zpl, skfile, smear)
-    pre_gs = os.path.join(path_to_qe, "relax-gs/relax")
-    pre_es = os.path.join(path_to_qe, "relax-cdftup1/relax")
+    pre_gs = path_gs
+    pre_es = path_ex
 
     if zpl is None:
         print("Zero-Phonon Line calculated from QE output".format(indent))
