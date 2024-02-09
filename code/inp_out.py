@@ -35,11 +35,11 @@ class inp_class:
     # improves accuracy of integral, unitless
     tolerance = 1e-18
     # min energy for PL spectrum
-    hw_min = 0.0 * Electron2Coulomb
+    hw_min = 1.0 * Electron2Coulomb
     # max energy for PL spectrum
-    hw_max = 2.0 * Electron2Coulomb
+    hw_max = 2.1 * Electron2Coulomb
     # number of points to produce
-    hw_steps = 300
+    hw_steps = 600
 
     def gen_hw_array(self):
         dhw = (self.hw_max - self.hw_min) / self.hw_steps
@@ -67,10 +67,10 @@ class inp_class:
         print( "{} path_ex   = {}".format(2 * indent, self.path_ex) )
         print( "{} phonon_interface   = {}".format(2 * indent, self.phonon_interface) )
         print( "{} file_phonon   = {}".format(2 * indent, self.file_phonon))
-        # if 'zpl' in vars():
-        #     print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
-        # else:
-        #     print( "{} zpl (eV)     = {}".format(2 * indent, "from input") )
+        if 'zpl' in vars():
+             print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
+        else:
+             print( "{} zpl (eV)     = {}".format(2 * indent, "from input") )
         print( "{} skfile       = {}".format(2 * indent, self.skfile) )
         print( "{} smear (eV)   = {:10.6e}".format(2 * indent, self.smear / E2C) )
         print( "{} limit (s)    = {:10.6e}".format(2 * indent, self.limit) )
@@ -123,7 +123,7 @@ def parse_input(lines, inp):
             elif arg == "file_phonon":
                 inp.file_phonon = line.split()[2]
             elif arg == "zpl":
-                inp.zpl = float(line.split()[2]) * Electron2Coulomb
+                inp.zpl = float(line.split()[2])
             elif arg == "skfile":
                 inp.skfile = line.split()[2]
             elif arg == "smear":

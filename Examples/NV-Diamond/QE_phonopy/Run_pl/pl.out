@@ -1,0 +1,36 @@
+
+Beginning Calculation and reading input
+         path_gs   = ../relax-gs/relax
+         path_ex   = ../relax-cdftup1/relax
+         phonon_interface   = phonopy
+         file_phonon   = ../2_Post_process_for_PL/band.yaml
+         skfile       = None
+         smear (eV)   = 6.000000e-03
+         limit (s)    = 1.000000e-12
+         gamma (s^-1) = 2.900000e+12
+         tolerance    = 1.000000e-18
+         hw_min (eV)  =   0.000000
+         hw_max (eV)  =   2.000000
+         hw_steps     = 600
+
+Zero-Phonon Line read from input file
+     ZPL =   1.945000
+
+Calculating Sk
+find input file for qe
+find input file for qe
+Read phonon from ../2_Post_process_for_PL/band.yaml
+     Inverse Participation Ratios saved to ipr.dat
+     Huang-Rhys factor =   2.149951
+     S(t->0) == HR?   False
+     G(t->inf) =   0.116490 +   0.000000 i
+
+Calculating A(ZPL - E)
+     time now:  7.463956117630005  sec
+     time now:  28.472466230392456  sec
+
+    PL calculation finished
+
+    Data saved to 'pl.dat' and plot saved to 'pl.png'
+
+Done!

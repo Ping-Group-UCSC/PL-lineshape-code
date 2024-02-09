@@ -40,11 +40,17 @@ def main():
     pre_es = path_ex
 
     if zpl is None:
-        print("Zero-Phonon Line calculated from QE output".format(indent))
-        zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
+        if os.path.exists(os.path.join(pre_gs,"OUTCAR")) and os.path.exists(os.path.join(pre_es,"OUTCAR")):
+            gs_outcar = os.path.join(pre_gs,"OUTCAR")
+            es_outcar = os.path.join(pre_es,"OUTCAR")
+            print("Zero-phonon Line calculated from VASP output".format(indent))
+            zpl = read_ZPL(gs_outcar, es_outcar, interface='vasp') * Electron2Coulomb
+        else:
+            print("Zero-Phonon Line calculated from QE output".format(indent))
+            zpl = read_ZPL(pre_gs + ".out", pre_es + ".out", interface='qe') * Electron2Coulomb
     else:
         print("Zero-Phonon Line read from input file".format(indent))
-        zpl = 1.945 * Electron2Coulomb
+        zpl = zpl * Electron2Coulomb
     print("{} ZPL = {:10.6f}\n".format(indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
@@ -95,7 +101,7 @@ def main():
 
     if not os.path.exists("pl.dat"):
         # calculate pl and save to pl.dat
-        hw_array = gen_hw_list(1.0, 2.1, 600)
+        #hw_array = gen_hw_list(1.0, 2.1, 600)
         print(indent, "time now: ", time.time() - start_time, " sec")
         _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
                              wk, sk, hr, gamma, tolerance, integrate_method="romberg")

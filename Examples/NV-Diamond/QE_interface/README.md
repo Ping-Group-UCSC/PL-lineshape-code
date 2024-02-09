@@ -79,7 +79,8 @@ python3 -u ../../../code/main.py | tee pl.out
 ```
 
 -----------------------------------
-New input added:
+Note from newer version:
+The path_to_qe has been replaced by : "path_gs" and "path_ex"
 - path_gs:
     
     The path of ground state calculation. 

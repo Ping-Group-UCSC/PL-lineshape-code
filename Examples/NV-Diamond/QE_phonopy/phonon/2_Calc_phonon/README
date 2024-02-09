@@ -1,0 +1,13 @@
+I: 0_Generate_Forceset.sh
+This script copy and generate required file for phonon calculation: phonopy_disp.yaml and FORCE_SETS
+
+phonopy_disp.yaml is copied from supercell generating step;
+
+1. set the Folder of vasp calculations, copy the phonopy_disp.yaml to current folder
+2. set the directory of phonopy execution
+3. run script
+4. this will generate the FORCE_SETS file
+
+Folder start with: 
+$ls
+0_Generate_Forceset.sh  1_Run_pp.sh  pp_inputs  README

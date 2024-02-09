@@ -1,0 +1,12 @@
+path_gs = ../relax-gs/relax
+path_ex = ../relax-cdftup1/relax
+phonon_interface = phonopy
+file_phonon = ../phonon/2_Calc_phonon/band.yaml
+#zpl = 1.945
+smear = 0.006
+limit = 1e-12
+gamma = 2.9e12
+hw_steps = 600
+
+# tolerance = 0.5e-18
+

@@ -2,6 +2,7 @@
 
 import os
 import yaml
+import re
 
 from constant import indent, Ry2eV, conv_freq_to_omega, THzToCm
 
@@ -96,17 +97,38 @@ def calc_nat_nmodes(lines):
     return nat, nmodes
 
 
-def read_ZPL(f1, f2):
+def read_ZPL(f1, f2, interface="qe"):
     if os.path.exists(f1) and os.path.exists(f2):
-        zpl = abs(read_totE(f1) - read_totE(f2))
-        return zpl
+        if interface=="qe":
+            zpl = abs(read_totE(f1) - read_totE(f2))
+            return zpl
+        elif interface=="vasp":
+            zpl = abs(read_totE_vasp(f1) - read_totE_vasp(f2))
+            return zpl
     elif not os.path.exists(f1):
         print("The file %s does not exist" % f1)
         return None
     else:
         print("The file %s does not exist" % f2)
         return None
-
+    
+def read_totE_vasp(file):
+    etot=None
+    elec_conv=False
+    ion_conv=False
+    with open(file) as f:
+        lines = f.readlines()
+        for line in lines[::-1]:
+            if "EDIFF is reached" in line:
+                elec_conv= True
+            if "reached required accuracy - stopping structural energy minimisation" in line:
+                ion_conv = True
+            m=re.search("TOTEN\s+=\s+(.+)\s+eV",line)
+            if m:
+                etot=m.groups()[-1]
+                break
+        print(f"electron convergence reached? {elec_conv}. Ionic convergence reached? {ion_conv} ")
+    return float(etot)
 
 def read_totE(file):
     with open(file) as f:
