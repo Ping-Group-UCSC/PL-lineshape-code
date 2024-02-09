@@ -1,0 +1,7 @@
+&input
+ fildyn = 'matdyn'
+ asr = 'simple',
+ filout = 'dynmat.dat',
+ filxsf = 'dynmat.axsf',
+ lperm = .true.
+/

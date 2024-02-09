@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 
 import os
+import yaml
+import re
 
-from constant import indent, Ry2eV, conv_freq_to_omega
+from constant import indent, Ry2eV, conv_freq_to_omega, THzToCm
 
+def read_dynmat_mold(nat, file, interface='qe'):
+    """
+    interface: 'qe' , or 'phonopy'
+    """
+    if interface=='qe':
+        wk, list_delta_r = read_dynmat_mold_qe(nat, file)
+    elif interface=='phonopy':
+        wk, list_delta_r = read_dynmat_mold_phonopy(file)
+    else:
+        raise ValueError("Interface {} not implemented".format(interface))
+    return wk, list_delta_r
 
-def read_dynmat_mold(nat, file):
+def read_dynmat_mold_qe(nat, file):
     """
     Check if file exists and return freq and list_delta_r
     """
@@ -13,6 +26,8 @@ def read_dynmat_mold(nat, file):
         with open(file) as f:
             print(indent, "Read dynmat mold from", file)
             lines = f.readlines()
+    else:
+        raise ValueError("couldn't find phonon file {}".format(file)) 
     #    nat, nmodes = calc_nat_nmodes(lines)
     nmodes = nat * 3
     for i, line in enumerate(lines):
@@ -36,6 +51,35 @@ def read_dynmat_mold(nat, file):
                 begin = end + 1
     return wk, list_delta_r
 
+def read_dynmat_mold_phonopy(f_band):
+    """
+    Check if file exists and return freq and list_delta_r
+    f_band:  band.yaml include band information;
+    interfaced with phonopy
+    """
+    #read data from file
+    if os.path.exists(f_band):
+        with open(f_band, "r") as f:
+            print("Read phonon from", f_band)
+            ph_data = yaml.safe_load(f)
+    else:
+        raise ValueError("couldn't find phonon file {}".format(f_band))      
+
+    #read frequency and mode
+    for d in ph_data['phonon']:
+        if d['q-position']==[0.0, 0.0, 0.0]: 
+            #the frequency in phonopy is THz; frequency of qe is cm-1;
+            freq = [band['frequency']*THzToCm for band in d['band']]
+            wk = [fre*conv_freq_to_omega for fre in freq]
+            vec = [band['eigenvector'] for band in ph_data['phonon'][0]['band']] #phonon mode
+            #we keep only the real part;
+            list_delta_r = [
+     [[r_component[0] for r_component in atoms] for atoms in mode ] for mode in vec
+                            ]
+            break
+        raise ValueError("didn't find q=(0,0,0) point")
+        
+    return wk, list_delta_r
 
 def calc_nat_nmodes(lines):
     count_flag = False
@@ -53,17 +97,38 @@ def calc_nat_nmodes(lines):
     return nat, nmodes
 
 
-def read_ZPL(f1, f2):
+def read_ZPL(f1, f2, interface="qe"):
     if os.path.exists(f1) and os.path.exists(f2):
-        zpl = abs(read_totE(f1) - read_totE(f2))
-        return zpl
+        if interface=="qe":
+            zpl = abs(read_totE(f1) - read_totE(f2))
+            return zpl
+        elif interface=="vasp":
+            zpl = abs(read_totE_vasp(f1) - read_totE_vasp(f2))
+            return zpl
     elif not os.path.exists(f1):
         print("The file %s does not exist" % f1)
         return None
     else:
         print("The file %s does not exist" % f2)
         return None
-
+    
+def read_totE_vasp(file):
+    etot=None
+    elec_conv=False
+    ion_conv=False
+    with open(file) as f:
+        lines = f.readlines()
+        for line in lines[::-1]:
+            if "EDIFF is reached" in line:
+                elec_conv= True
+            if "reached required accuracy - stopping structural energy minimisation" in line:
+                ion_conv = True
+            m=re.search("TOTEN\s+=\s+(.+)\s+eV",line)
+            if m:
+                etot=m.groups()[-1]
+                break
+        print(f"electron convergence reached? {elec_conv}. Ionic convergence reached? {ion_conv} ")
+    return float(etot)
 
 def read_totE(file):
     with open(file) as f:

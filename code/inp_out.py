@@ -15,7 +15,12 @@ class inp_class:
     defaults
     """
     # path to qe output: relax-gs, relax-cdftup1, relax-gs/PH
-    path_to_qe = "."
+    path_gs = "./relax-gs/relax"
+    path_ex = "./relax-cdftup1/relax"
+    # phonon interface = qe or phonopy;
+    phonon_interface = "qe"
+    # phonon file, default is from qe:
+    file_phonon = os.path.join(".", "relax-gs/PH/dynmat.mold")
     # zero-phonon line, units eV (converted to Joules)
     zpl = None
     # file to read previously calculated wk, Sk
@@ -30,11 +35,11 @@ class inp_class:
     # improves accuracy of integral, unitless
     tolerance = 1e-18
     # min energy for PL spectrum
-    hw_min = 0.0 * Electron2Coulomb
+    hw_min = 1.0 * Electron2Coulomb
     # max energy for PL spectrum
-    hw_max = 2.0 * Electron2Coulomb
+    hw_max = 2.1 * Electron2Coulomb
     # number of points to produce
-    hw_steps = 300
+    hw_steps = 600
 
     def gen_hw_array(self):
         dhw = (self.hw_max - self.hw_min) / self.hw_steps
@@ -43,7 +48,10 @@ class inp_class:
     def contents(self):
         # return tuple of all inp contents
         return (
-            self.path_to_qe,
+            self.path_gs,
+            self.path_ex,
+            self.phonon_interface,
+            self.file_phonon,
             self.zpl,
             self.skfile,
             self.smear,
@@ -55,11 +63,14 @@ class inp_class:
 
     def print_contents(self):
         E2C = Electron2Coulomb
-        print( "{} path_to_qe   = {}".format(2 * indent, self.path_to_qe) )
-        # if 'zpl' in vars():
-        #     print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
-        # else:
-        #     print( "{} zpl (eV)     = {}".format(2 * indent, "from input") )
+        print( "{} path_gs   = {}".format(2 * indent, self.path_gs) )
+        print( "{} path_ex   = {}".format(2 * indent, self.path_ex) )
+        print( "{} phonon_interface   = {}".format(2 * indent, self.phonon_interface) )
+        print( "{} file_phonon   = {}".format(2 * indent, self.file_phonon))
+        if 'zpl' in vars():
+             print( "{} zpl (eV)     = {}".format(2 * indent, str(self.zpl / E2C)) )
+        else:
+             print( "{} zpl (eV)     = {}".format(2 * indent, "from input") )
         print( "{} skfile       = {}".format(2 * indent, self.skfile) )
         print( "{} smear (eV)   = {:10.6e}".format(2 * indent, self.smear / E2C) )
         print( "{} limit (s)    = {:10.6e}".format(2 * indent, self.limit) )
@@ -103,10 +114,16 @@ def parse_input(lines, inp):
     for line in lines:
         if ("=" in line) and ("#" not in line.split()[0]):
             arg = line.split()[0]
-            if arg == "path_to_qe":
-                inp.path_to_qe = line.split()[2]
+            if arg == "path_gs":
+                inp.path_gs = line.split()[2]
+            elif arg == "path_ex":
+                inp.path_ex = line.split()[2]
+            elif arg == "phonon_interface":
+                inp.phonon_interface = line.split()[2]
+            elif arg == "file_phonon":
+                inp.file_phonon = line.split()[2]
             elif arg == "zpl":
-                inp.zpl = float(line.split()[2]) * Electron2Coulomb
+                inp.zpl = float(line.split()[2])
             elif arg == "skfile":
                 inp.skfile = line.split()[2]
             elif arg == "smear":

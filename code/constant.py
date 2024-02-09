@@ -25,12 +25,11 @@ second2au = 1 / 2.418884326505e-17
 THzOrd2meV = 4.13566903434377990
 THzAng2meV = 4.13566903434377990 / 2 * pi
 
-
 # added
 speed_of_light = 299792458.0  # m/s
 inv_cm_to_Hz = 100 * speed_of_light
 conv_freq_to_omega = inv_cm_to_Hz * 2 * pi
-
+THzToCm = 1.0e12 / (speed_of_light * 100)  # frequency unit: THz to [cm^-1] 33.356410
 # for formatting
 indent = "    "
 

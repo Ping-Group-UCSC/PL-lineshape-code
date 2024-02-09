@@ -34,25 +34,29 @@ def main():
 
     print("\nBeginning Calculation and reading input")
     # read input file
-    path_to_qe, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input()
+    path_gs, path_ex, phonon_interface, file_phonon, zpl, skfile, smear, limit, gamma, tolerance, hw_array = read_input() # Add
     # print(path_to_qe, zpl, skfile, smear)
-
-    pre_gs = os.path.join(path_to_qe, "relax-gs/relax")
-    pre_es = os.path.join(path_to_qe, "relax-cdftup1/relax")
-    dyn_file = os.path.join(path_to_qe, "relax-gs/PH/dynmat.mold")
+    pre_gs = path_gs
+    pre_es = path_ex
 
     if zpl is None:
-        print("Zero-Phonon Line calculated from QE output".format(indent))
-        zpl = read_ZPL(pre_gs + ".out", pre_es + ".out") * Electron2Coulomb
+        if os.path.exists(os.path.join(pre_gs,"OUTCAR")) and os.path.exists(os.path.join(pre_es,"OUTCAR")):
+            gs_outcar = os.path.join(pre_gs,"OUTCAR")
+            es_outcar = os.path.join(pre_es,"OUTCAR")
+            print("Zero-phonon Line calculated from VASP output".format(indent))
+            zpl = read_ZPL(gs_outcar, es_outcar, interface='vasp') * Electron2Coulomb
+        else:
+            print("Zero-Phonon Line calculated from QE output".format(indent))
+            zpl = read_ZPL(pre_gs + ".out", pre_es + ".out", interface='qe') * Electron2Coulomb
     else:
         print("Zero-Phonon Line read from input file".format(indent))
-        zpl = 1.945 * Electron2Coulomb
+        zpl = zpl * Electron2Coulomb
     print("{} ZPL = {:10.6f}\n".format(indent, (zpl / Electron2Coulomb)))
 
     # calc wk and sk or read it from a file
     if skfile is None:
         print("Calculating Sk")
-        _, wk, _, sk, list_delta_r = readSk_qe(pre_gs, pre_es, dyn_file)
+        _, wk, _, sk, list_delta_r = readSk_qe(pre_gs, pre_es, file_phonon, phonon_interface=phonon_interface)
         # np.savetxt('sk.dat', np.array([wk, sk]).T)
         np.savetxt('sk.dat', np.array(
             [wk * hbar_Js / Electron2Coulomb * 1e3, sk]).T)
@@ -97,7 +101,7 @@ def main():
 
     if not os.path.exists("pl.dat"):
         # calculate pl and save to pl.dat
-        hw_array = gen_hw_list(1.0, 2.1, 600)
+        #hw_array = gen_hw_list(1.0, 2.1, 600)
         print(indent, "time now: ", time.time() - start_time, " sec")
         _, _, pl_norm = A_hw(hw_array, zpl, limit, smear,
                              wk, sk, hr, gamma, tolerance, integrate_method="romberg")

@@ -1,0 +1,16 @@
+phonons of hBN
+ &inputph
+  recover=.true.
+  verbosity='high'
+  !alpha_mix(1)=0.7,
+  tr2_ph=1.0d-15,
+  prefix='di',
+  outdir='..',
+  !epsil=.true.,
+  verbosity = 'high'
+  !ldisp = .true.
+  !nq1=6
+  !nq2=6
+  !nq3=4
+ /
+0.0 0.0 0.0

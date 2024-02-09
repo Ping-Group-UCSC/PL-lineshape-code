@@ -69,7 +69,7 @@ def Sk(wk, qk):
     return sk
 
 
-def readSk_qe(pre_gs, pre_es, dyn_file):
+def readSk_qe(pre_gs, pre_es, dyn_file, phonon_interface='qe'):
     """
     main call for reading sk from qe output
     returns nat, wk, qk, sk
@@ -79,7 +79,9 @@ def readSk_qe(pre_gs, pre_es, dyn_file):
     # print (list_pos_f)
     nat = len(list_pos_f)
     # nmodes = 3*nat
-    wk, list_delta_r = read_dynmat_mold(nat, dyn_file)
+   #wk, list_delta_r = read_dynmat_mold(nat, dyn_file, interface=phonon_interface)
+    #print("input of phonon file is :",dyn_file)
+    wk, list_delta_r = read_dynmat_mold(nat, dyn_file, interface=phonon_interface)
     wk = np.array(wk)
     # print(wk)
     qk = calc_qk(vecR, list_pos_i, list_pos_f, list_delta_r)

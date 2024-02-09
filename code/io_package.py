@@ -21,10 +21,14 @@ def read_cell_and_pos_auto(arg):
     All returned positions are in unit of angstrom
     '''
     if (os.path.exists(arg + ".in")):
+        print("find input file for qe")
         return read_cell_and_pos_qe(arg), "qe"
-    elif ("POSCAR" in arg or "CONTCAR" in arg):
-        return read_cell_and_pos_poscar(arg), "vasp"
+    elif os.path.exists(os.path.join(arg,"CONTCAR")):
+        return read_cell_and_pos_poscar(os.path.join(arg,"CONTCAR")), "vasp"
+    elif os.path.exists(os.path.join(arg,"POSCAR")):
+        return read_cell_and_pos_poscar(os.path.join(arg,"POSCAR")), "vasp"
     else:
+        raise ValueError("invalid path {}".format(arg))
         return None, None
 
 def write_cell_and_pos_auto(package, *args, **kwargs):
@@ -153,7 +157,6 @@ def read_cell_and_pos_poscar(filename):
     '''
     with open(filename, 'r') as f:
         lines = f.readlines()
-    
     vecR = np.asarray([[float(x) for x in line.split()] for line in lines[2:5]]).T
     atoms = lines[5].split()
     natoms = [int(x) for x in lines[6].split()]
@@ -161,9 +164,10 @@ def read_cell_and_pos_poscar(filename):
     i = 8
     for atom, n in zip(atoms, natoms):
         for j in range(n):
-            list_pos.append({"species": atom, "pos" : np.asarray([float(x) for x in lines[i].split()])})
+            list_pos.append({"species": filter(lambda x:x.isalpha(), atom), 
+                             "pos" : np.asarray([float(x) for x in lines[i].split()]),
+                            "speciesfull" : atom})
             i += 1
-
     return vecR, list_pos
 
 def write_cell_and_pos_qe(filename, vecR, list_pos):
