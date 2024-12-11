@@ -10,7 +10,16 @@ from matplotlib import cm
 from mpl_toolkits import mplot3d
 
 from io_package import read_cell_and_pos_qe
+from io_package import read_cell_and_pos_auto
 
+
+def dQ(pre_gs,pre_es):
+    """
+    print the dQ between excited state and gs
+    """
+    (vecR, list_pos_f), package = read_cell_and_pos_auto(pre_gs)
+    (vecR, list_pos_i), package = read_cell_and_pos_auto(pre_es)
+    print("TODO")
 
 def handler(signal_received, frame):
     # Handle any cleanup here

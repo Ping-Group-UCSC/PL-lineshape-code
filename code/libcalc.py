@@ -170,6 +170,10 @@ def A_integral(hw, limit, smear, wk, sk, hr, gamma, tolerance, integrate_method=
         y = integrate.romberg(
             A_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), tol=tolerance, vec_func=True
         )
+    elif integrate_method == 'quad':
+        y = integrate.quad(
+            A_integrand, -limit, limit, args=(hw, smear, wk, sk, hr, gamma), epsabs=tolerance, epsrel=tolerance
+        )
     else:
         print("integrate_method only supports quad_vec and romberg")
     return y
