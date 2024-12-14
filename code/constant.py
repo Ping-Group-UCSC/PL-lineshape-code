@@ -25,7 +25,7 @@ second2au = 1 / 2.418884326505e-17
 
 THzOrd2meV = 4.13566903434377990
 THzAng2meV = 4.13566903434377990 / 2 * pi
-
+THzToCm = 33 #transfer THz to cm-1
 
 # added
 speed_of_light = 299792458.0  # [m/s]

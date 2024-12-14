@@ -3,7 +3,7 @@
 import os
 import numpy as np
 
-from constant import Electron2Coulomb, indent
+from constant import Electron2Coulomb, indent, h_eVs
 
 
 class inp_class:
@@ -25,25 +25,46 @@ class inp_class:
     zpl = None
     # file to read previously calculated wk, Sk
     skfile = None
+    # gamma factor in PL, units of s^-1 [Hz]
+    gamma = 0.28571428571e14
     # smearing for S(hw), units eV (converted to Joules)
     smear = 0.006 * Electron2Coulomb
-    # limit used in integral, units of s
-    limit = 3.5e-13
-    # gamma factor in PL, units of s^-1
-    # gamma = 0.28571428571e13
-    gamma = 0.28571428571e14
-    # improves accuracy of integral, unitless
-    tolerance = 1e-18
-    # min energy for PL spectrum
+    # min energy for PL spectrum ([eV] --> converted [J])
     hw_min = 1.0 * Electron2Coulomb
-    # max energy for PL spectrum
+    # max energy for PL spectrum ([eV] --> converted [J])
     hw_max = 2.1 * Electron2Coulomb
     # number of points to produce
-    hw_steps = 600
+    hw_steps = None
+    resolution = 1000
+    #integral options:
+    cal_method = "FFT" #method for compute PL spectrum A_hw; 'integral' or 'FFT'
+    #if cal_method = 'integral', then following options choose integral method and threshold
+    integral_method = "quad_vec"    #integral method for calculating A_hw ('quad_vec' & 'romberg')
+    # improves accuracy of integral, unitless
+    tolerance = 1e-18
+    # limit used in integral, units of s
+    limit = 3.5e-13
+    #options : hard coded, not read by pl.in
+
+    #plot option
+    PL_hw_xmin = 1.2 #[eV]
+    PL_hw_xmax = 2.4 #[eV]
+    #S_hw plot option
+    S_hw_xmin = 0 #[eV]
+    S_hw_xmax = 0.2 #[eV]
+    plot_flag = True    #option for ploting all data
+    plot_pHR = True     #option for ploting HR factor
+    parallel = False    #option for integral with parallel (only for 'quad_vec')
+    smear_end = None
+    
 
     def gen_hw_array(self):
-        dhw = (self.hw_max - self.hw_min) / self.hw_steps
-        return np.arange(self.hw_min, self.hw_max, dhw)
+        if self.hw_steps != None:
+            dhw = (self.hw_max - self.hw_min) / self.hw_steps # (hw_max - hw_min)/hw_step
+        else:
+            dhw = (Electron2Coulomb) /self.resolution # (1eV-0eV)/resolution
+
+        self.hw_array = np.arange(self.hw_min, self.hw_max, dhw) #converted to [J]
 
     def contents(self):
         # return tuple of all inp contents
@@ -59,6 +80,8 @@ class inp_class:
             self.gamma,
             self.tolerance,
             self.gen_hw_array(),
+            self.cal_method,
+            self.integral_method
         )
 
     def print_contents(self):
@@ -75,10 +98,23 @@ class inp_class:
         print( "{} smear (eV)   = {:10.6e}".format(2 * indent, self.smear / E2C) )
         print( "{} limit (s)    = {:10.6e}".format(2 * indent, self.limit) )
         print( "{} gamma (s^-1) = {:10.6e}".format(2 * indent, self.gamma) )
+        print( "{} gamma (eV) = {:10.6e} (E=hf)".format(2 * indent, self.gamma*h_eVs) )
         print( "{} tolerance    = {:10.6e}".format(2 * indent, self.tolerance) )
         print( "{} hw_min (eV)  = {:10.6f}".format(2 * indent, self.hw_min / E2C) )
         print( "{} hw_max (eV)  = {:10.6f}".format(2 * indent, self.hw_max / E2C) )
-        print( "{} hw_steps     = {}".format(2 * indent, int(self.hw_steps)) )
+        if self.hw_steps != None:
+            print( "{} hw_steps     = {}".format(2 * indent, int(self.hw_steps)) )
+        else:   
+            print( "{} resolution   = {}".format(2 * indent, int(self.resolution)) )
+        print( "{} cal_method   = {}".format(2 * indent, self.cal_method))
+        #condition of integral
+        if self.cal_method == "integral":
+            print( "{} limit (s)    = {:10.6e}".format(2 * indent, self.limit) )
+            print( "{} tolerance    = {:10.6e}".format(2 * indent, self.tolerance) )
+        print( "{} PL_hw_xim = {:10.6e}".format(2 * indent, self.PL_hw_xmin) )
+        print( "{} PL_hw_xmax = {:10.6e}".format(2 * indent, self.PL_hw_xmax) )
+        print( "{} S_hw_xmin = {:10.6e}".format(2 * indent, self.S_hw_xmin) )
+        print( "{} S_hw_xmax = {:10.6e}".format(2 * indent, self.S_hw_xmax) )
         print()
 
 
@@ -103,8 +139,9 @@ def read_input():
 
     inp.print_contents()
 
-    return inp.contents()
-
+    #return inp.contents()
+    inp.gen_hw_array()
+    return inp
 
 def parse_input(lines, inp):
     """
@@ -115,23 +152,27 @@ def parse_input(lines, inp):
         if ("=" in line) and ("#" not in line.split()[0]):
             arg = line.split()[0]
             if arg == "path_gs":
-                inp.path_gs = line.split()[2]
+                inp.path_gs = str(line.split()[2])
             elif arg == "path_ex":
-                inp.path_ex = line.split()[2]
+                inp.path_ex = str(line.split()[2])
             elif arg == "phonon_interface":
-                inp.phonon_interface = line.split()[2]
+                inp.phonon_interface = str(line.split()[2])
             elif arg == "file_phonon":
-                inp.file_phonon = line.split()[2]
+                inp.file_phonon = str(line.split()[2])
             elif arg == "zpl":
                 inp.zpl = float(line.split()[2])
             elif arg == "skfile":
-                inp.skfile = line.split()[2]
+                inp.skfile = str(line.split()[2])
             elif arg == "smear":
                 inp.smear = float(line.split()[2]) * Electron2Coulomb
+            elif arg == "smear_end": #([eV] --> converted [J])
+                inp.smear_end = float(line.split()[2]) * Electron2Coulomb
             elif arg == "limit":
                 inp.limit = float(line.split()[2])
             elif arg == "gamma":
                 inp.gamma = float(line.split()[2])
+            elif arg == "gamma_ev": #[eV]--> convert to Hz
+                inp.gamma = float(line.split()[2]) / h_eVs
             elif arg == "tolerance":
                 inp.tolerance = float(line.split()[2])
             elif arg == "hw_min":
@@ -140,6 +181,20 @@ def parse_input(lines, inp):
                 inp.hw_max = float(line.split()[2]) * Electron2Coulomb
             elif arg == "hw_steps":
                 inp.hw_steps = float(line.split()[2])
+            elif arg == "resolution":
+                inp.resolution= int(line.split()[2])
+            elif arg == "cal_method":
+                inp.cal_method = str(line.split()[2])
+            elif arg == "integral_method":
+                inp.integral_method = str(line.split()[2])
+            elif arg == "PL_hw_xmax": #[eV] #figure of PL xrange
+                inp.PL_hw_xmax = float(line.split()[2])
+            elif arg == "PL_hw_xmin": #[eV] #figure of PL xrange
+                inp.PL_hw_xmin = float(line.split()[2])
+            elif arg == "S_hw_xmin":  #[eV] #figure of S_hw xrange
+                inp.S_hw_xmin = float(line.split()[2])
+            elif arg == "S_hw_xmax": #[eV] #figure of S_hw xrange
+                inp.S_hw_xmax = float(line.split()[2])
             else:
                 print("Argument: '%s' not recognized" % arg)
     return inp
