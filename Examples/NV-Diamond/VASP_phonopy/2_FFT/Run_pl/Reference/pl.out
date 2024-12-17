@@ -1,0 +1,60 @@
+
+Beginning Calculation and reading input
+         path_gs   = ../relax-gs/
+         path_ex   = ../cdftup/from_QE
+         phonon_interface   = phonopy
+         file_phonon   = ../phonon/2_Calc_phonon/band.yaml
+         zpl (eV)     = from input
+         skfile       = None
+         smear (eV)   = 6.000000e-03
+         limit (s)    = 3.500000e-13
+         gamma (s^-1) = 2.901587e+12
+         gamma (eV) = 1.200000e-02 (E=hf)
+         tolerance    = 1.000000e-18
+         hw_min (eV)  =   0.000000
+         hw_max (eV)  =   5.000000
+         resolution   = 2000
+         cal_method   = FFT
+         PL_hw_xim = 1.500000e+00
+         PL_hw_xmax = 2.100000e+00
+         S_hw_xmin = 0.000000e+00
+         S_hw_xmax = 2.000000e-01
+
+    >> Computing method is 'FFT'
+
+Zero-Phonon Line read from input file
+     ZPL =   1.945000
+
+Calculating Sk
+Read phonon from ../phonon/2_Calc_phonon/band.yaml
+     Inverse Participation Ratios saved to ipr.dat
+     Huang-Rhys factor =   2.181416
+
+	You choose the FFT method to compute the A_hw!
+	So, plotting of S_t and G_t is passed..
+
+plot S(hw), hw sampling =  None make sure you use large enough sampling for FFT
+hw_xlim= (0.0, 200.0)
+
+Calculating A(ZPL - E)
+     time before calculate A_hw:  0:00:05.188116
+     now computing A_hw ...
+time_array : -1000.1000100010001 1000.1000100010001
+S_hw : -1.5940331669712727e-06 81.26161968170764
+S_t : (-0.28491443222779855-0.031111238619084294j) (0.43628316672119727+0j)
+G_t : (-0.26242814349603477+0.4846235462300329j) (1.7503786936897359+0j)
+gamma : 0.012
+tmp_A_hw_1 : (-0.25651130682067136-0.4736969804513824j) ~ (1.748279079376034+0j)
+tmp_A_hw_2 : (-88.3526442318259-0.006664587685626708j) ~ (94.3774429059192-0.020883058776170502j)
+zpl_ev : 1.945
+A_hw : (-88.3526442318259-0.006664587685626708j) (94.3774429059192-0.020883058776170502j)
+pl_hw : 0.0 694.2193889943175
+     time after calculate A_hw:  0:00:06.357736
+
+    PL calculation finished
+
+    Data saved to 'pl.dat' and plot saved to 'pl.png'
+
+Total time cost for computing :  0:00:06.588893
+
+Done!

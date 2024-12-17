@@ -1,0 +1,62 @@
+
+Beginning Calculation and reading input
+         path_gs   = ./relax-gs/relax
+         path_ex   = ./relax-cdftup1/relax
+         phonon_interface   = qe
+         file_phonon   = ./relax-gs/PH/dynmat.mold
+         zpl (eV)     = from input
+         skfile       = None
+         smear (eV)   = 6.000000e-03
+         limit (s)    = 3.500000e-13
+         gamma (s^-1) = 2.901587e+12
+         gamma (eV) = 1.200000e-02 (E=hf)
+         tolerance    = 1.000000e-18
+         hw_min (eV)  =   0.000000
+         hw_max (eV)  =   5.000000
+         resolution   = 2000
+         cal_method   = FFT
+         PL_hw_xim = 1.500000e+00
+         PL_hw_xmax = 2.100000e+00
+         S_hw_xmin = 0.000000e+00
+         S_hw_xmax = 2.000000e-01
+
+    >> Computing method is 'FFT'
+
+Zero-Phonon Line read from input file
+     ZPL =   1.945000
+
+Calculating Sk
+find input file for qe
+find input file for qe
+     Read dynmat mold from ./relax-gs/PH/dynmat.mold
+     Inverse Participation Ratios saved to ipr.dat
+     Huang-Rhys factor =   2.153908
+
+	You choose the FFT method to compute the A_hw!
+	So, plotting of S_t and G_t is passed..
+
+plot S(hw), hw sampling =  None make sure you use large enough sampling for FFT
+hw_xlim= (0.0, 200.0)
+
+Calculating A(ZPL - E)
+     time before calculate A_hw:  0:00:00.451014
+     now computing A_hw ...
+time_array : -1000.1000100010001 1000.1000100010001
+S_hw : 0.0 83.19482478367381
+S_t : (-0.2778478453400698-0.026446673928997008j) (0.4307815863780354+0j)
+G_t : (-0.25135881383364017-0.47891616982472496j) (1.7380653072732224+0j)
+gamma : 0.012
+tmp_A_hw_1 : (-0.24569155182220434-0.4681182854198982j) ~ (1.7359804631132385+0j)
+tmp_A_hw_2 : (-90.80255748554424-0.007664561079810119j) ~ (96.99560863772314-0.02065582670160629j)
+zpl_ev : 1.945
+A_hw : (-90.80255748554424-0.007664561079810119j) (96.99560863772314-0.02065582670160629j)
+pl_hw : 0.0 713.4780300115611
+     time after calculate A_hw:  0:00:01.634969
+
+    PL calculation finished
+
+    Data saved to 'pl.dat' and plot saved to 'pl.png'
+
+Total time cost for computing :  0:00:01.864766
+
+Done!

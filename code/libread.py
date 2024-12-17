@@ -3,6 +3,9 @@
 import os
 import yaml
 import re
+import h5py
+import numpy as np
+import sys
 
 from constant import indent, Ry2eV, conv_freq_to_omega, THzToCm
 
@@ -55,15 +58,25 @@ def read_dynmat_mold_phonopy(f_band):
     """
     Check if file exists and return freq and list_delta_r
     f_band:  band.yaml include band information;
-    interfaced with phonopy
+    interfaced with phonopy: read phonon info from band.yaml
     """
     #read data from file
-    if os.path.exists(f_band):
-        with open(f_band, "r") as f:
-            print("Read phonon from", f_band)
-            ph_data = yaml.safe_load(f)
-    else:
+    if not os.path.exists(f_band):
         raise ValueError("couldn't find phonon file {}".format(f_band))      
+    if ".yaml" in f_band:
+        wk, list_delta_r = read_phonon_yaml(f_band)
+    elif ".hdf5" in f_band:
+        wk, list_delta_r = read_phonon_hdf5(f_band)
+    else: 
+        raise ValueError("wrong format! need hdf5 or yaml phonon file.")
+        
+    return wk, list_delta_r
+
+def read_phonon_yaml(f_band):
+    #read phonon from phononpy file : bands.yaml
+    with open(f_band, "r") as f:
+        print("Read phonon from", f_band)
+        ph_data = yaml.safe_load(f)  
 
     #read frequency and mode
     for d in ph_data['phonon']:
@@ -79,6 +92,62 @@ def read_dynmat_mold_phonopy(f_band):
             break
         raise ValueError("didn't find q=(0,0,0) point")
         
+    return wk, list_delta_r
+
+def read_phonon_hdf5(file):
+    """
+    Read the phonon freq. and eigenvector in hdf5 file from phononpy output
+    file='band.hdf5'
+    """
+    #open the *.hdf5
+    try :
+        f = h5py.File(file,'r')
+    except OSError:
+        print("Could not open/read file: band.hdf5 or qpoints.hdf5")
+        sys.exit()
+
+    #check the file have content
+    #print(list(f)) #--> ['dynamical_matrix', 'eigenvector', 'frequency', 'qpoint']
+    if 'eigenvector' not in list(f):
+        print("The hdf5 file doen't have 'eigenvector'!! re-run phonopy with '--eigvecs'")
+        sys.exit()
+    elif 'frequency' not in list(f):
+        print("The hdf5 file doen't have 'frequency'!! Is it phonon data?")
+        sys.exit()
+
+    #read the content; eigenvector and frequeency
+    tmp_eigenvector = f["eigenvector"][0].T #only Gamma point
+    leng = len(tmp_eigenvector)
+    tmp_eigenvector = tmp_eigenvector.reshape((leng, leng//3, 3)) #reshape the form; [freq.][atom][x,y,z]
+    tmp_freq = f["frequency"][0].astype('float64') #only Gamma point
+    #print("freq in band.yaml [THz]:")
+    #print(frequencies)
+    
+    #sort the freq. and eigenv
+    frequencies = np.sort(tmp_freq)
+    frequencies_index = np.argsort(tmp_freq)
+    del tmp_freq
+    
+    if list(frequencies_index) != range(leng):
+        
+        print("\n\tNow sort the freq. and eigenvector\n")
+        eigenvector = [tmp_eigenvector[i] for i in frequencies_index]
+        del tmp_eigenvector
+        eigenvector = np.array(eigenvector)
+    
+    
+
+    #when the freq is negative,
+    print("\t freq inserted [THz] :",frequencies)
+    count = np.where(frequencies <0)
+    frequencies = np.where(frequencies >0, frequencies, 0 )
+    print("\t # of negative freq :",len(count[0]))
+    print()
+
+    #change the format as code
+    wk = (frequencies * THzToCm * conv_freq_to_omega) # array type & unit : rad/s
+    list_delta_r = eigenvector # array type
+
     return wk, list_delta_r
 
 def calc_nat_nmodes(lines):

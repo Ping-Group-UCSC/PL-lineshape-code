@@ -1,0 +1,29 @@
+#inputs:
+
+path_gs = ../relax-gs/
+path_ex = ../cdftup/from_QE
+phonon_interface = phonopy
+file_phonon = ../phonon/2_Calc_phonon/band.yaml
+zpl = 1.945
+
+#smearing and gamma
+smear = 0.006
+#gamma = 2.9e12
+gamma_ev = 0.012
+resolution = 2000
+hw_min = 1.5
+hw_max = 2.5
+
+#integral method
+cal_method = integral
+integral_method = quad_vec
+limit = 1e-12
+tolerance = 0.5e-18
+
+#plot option:
+PL_hw_xmin = 1.5
+PL_hw_xmax = 2.1
+S_hw_xmin = 0
+S_hw_xmax = 0.2
+
+

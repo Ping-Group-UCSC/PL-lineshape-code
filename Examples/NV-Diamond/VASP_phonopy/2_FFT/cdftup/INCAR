@@ -1,0 +1,48 @@
+Global Parameters
+ISTART =  0            (Read existing wavefunction, if there)
+ISPIN  =  2            (Non-Spin polarised DFT)
+# ICHARG =  11         (Non-self-consistent: GGA/LDA band structures)
+LREAL  = .FALSE.       (Projection operators: automatic)
+ ENCUT  =  500        (Cut-off energy for plane wave basis set, in eV)
+# PREC   =  Accurate   (Precision level: Normal or Accurate, set Accurate when perform structure lattice relaxation calculation)
+FERWE = 128*1 64*0 128*1 64*0 128*1 64*0 128*1 64*0 128*1 64*0 128*1 64*0
+FERDO = 125*1 1*0 1*1 65*0 125*1 1*0 1*1 65*0 125*1 1*0 1*1 65*0 125*1 1*0 1*1 65*0 125*1 1*0 1*1 65*0 125*1 1*0 1*1 65*0
+NBANDS=192
+LWAVE  = .TRUE.        (Write WAVECAR or not)
+LCHARG = .TRUE.        (Write CHGCAR or not)
+ADDGRID= .TRUE.        (Increase grid, helps GGA convergence)
+NELEC=254
+# LVTOT  = .TRUE.      (Write total electrostatic potential into LOCPOT or not)
+ LVHAR  = .TRUE.      (Write ionic + Hartree electrostatic potential into LOCPOT or not)
+# NELECT =             (No. of electrons: charged cells, be careful)
+# LPLANE = .TRUE.      (Real space distribution, supercells)
+# NWRITE = 2           (Medium-level output)
+ KPAR   = 2           (Divides k-grid into separate groups)
+# NGXF    = 300        (FFT grid mesh density for nice charge/potential plots)
+# NGYF    = 300        (FFT grid mesh density for nice charge/potential plots)
+# NGZF    = 300        (FFT grid mesh density for nice charge/potential plots)
+ 
+Static Calculation
+ISMEAR =  -2            (gaussian smearing method)
+#SIGMA  =  0.05         (please check the width of the smearing)
+#LORBIT =  11           (PAW radii for projected DOS)
+#NEDOS  =  2001         (DOSCAR points)
+#NELM   =  60           (Max electronic SCF steps)
+EDIFF  =  1E-08        (SCF energy convergence, in eV)
+
+Ionic
+EDIFFG = -1E-02
+NSW = 100    # number of steps for IR
+IBRION = 2     # ionic relaxation: 0-MD 1-quasi Newtonian 2-Conjugate Gradient
+ISIF = 2       # stress and relaxation, default: 0 for MD 2 for else
+ISYM = 1       # 0-nonsym 1-usesym 2-fastsym, default: 2 for PAW dataset
+POTIM = 0.5    # time step for ionic motion, default: 0.5
+
+
+parallel setting:
+KPAR = 2
+NCORE = 2
+
+#ALGO = Damped
+#Time = 0.7
+#LDIAG = .FALSE.

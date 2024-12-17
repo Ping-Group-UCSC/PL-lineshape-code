@@ -1,0 +1,52 @@
+
+Beginning Calculation and reading input
+         path_gs   = ../relax-gs/
+         path_ex   = ../cdftup/from_QE
+         phonon_interface   = phonopy
+         file_phonon   = ../phonon/2_Calc_phonon/band.yaml
+         zpl (eV)     = from input
+         skfile       = None
+         smear (eV)   = 6.000000e-03
+         limit (s)    = 1.000000e-12
+         gamma (s^-1) = 2.901587e+12
+         gamma (eV) = 1.200000e-02 (E=hf)
+         tolerance    = 5.000000e-19
+         hw_min (eV)  =   1.500000
+         hw_max (eV)  =   2.500000
+         resolution   = 2000
+         cal_method   = integral
+         limit (s)    = 1.000000e-12
+         tolerance    = 5.000000e-19
+         PL_hw_xim = 1.500000e+00
+         PL_hw_xmax = 2.100000e+00
+         S_hw_xmin = 0.000000e+00
+         S_hw_xmax = 2.000000e-01
+
+    >> Computing method is 'integral'
+
+    >> Integral method is 'quad_vec'
+
+Zero-Phonon Line read from input file
+     ZPL =   1.945000
+
+Calculating Sk
+Read phonon from ../phonon/2_Calc_phonon/band.yaml
+     Inverse Participation Ratios saved to ipr.dat
+     Huang-Rhys factor =   2.181416
+use integral method for A(hw)
+plot S(hw) from 0.0 to 0.2 with resolution=1/1000
+     S(t->0) == HR?   False
+     G(t->inf) =   0.112882 +   0.000000 i
+
+Calculating A(ZPL - E)
+     time before calculate A_hw:  0:00:05.586164
+     now computing A_hw ...
+     time after calculate A_hw:  0:00:05.900850
+
+    PL calculation finished
+
+    Data saved to 'pl.dat' and plot saved to 'pl.png'
+
+Total time cost for computing :  0:00:06.141343
+
+Done!

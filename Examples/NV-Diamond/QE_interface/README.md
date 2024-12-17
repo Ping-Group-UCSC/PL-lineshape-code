@@ -25,20 +25,8 @@ python3 -u ../../code/main.py | tee pl.out
 ```
 
 2. The first thing the code will output is the parameters to be used in the calculation. Each of these parametrs can be changed in input file named `pl.in` (as done in step 10).
+see input description for the input setup
 
-```
-     No 'pl.in': Default parameters are assumed
-         path_to_qe   = .
-         zpl (eV)     = from input
-         skfile       = None
-         smear (eV)   = 0.006
-         limit (s)    = 3.5e-13
-         gamma (s^-1) = 2857142857100.0
-         tolerance    = 1e-18
-         hw_min (eV)  = 0.0
-         hw_min (eV)  = 2.0
-         hw_steps     = 300
-```
 
 3. Next (if not specified by the input) the code calculates the zero-phonon line (ZPL) reading the total energies from `relax-gs/relax.out` and `relax-cdfupt1/relax.out`.
 
@@ -70,13 +58,6 @@ Calculating A(ZPL - E)
 
 6. This integration will take approximately 45 minutes, and afterwards a final PL spectra will be produced with the data saved in `pl.dat` and plot saved to `pl.png`
 
-
-7. Enter `Better` and run another calculation but this time specifying an input file `pl.in`. The code will automatically the code will read from its contents.
-
-```bash
-cd Better
-python3 -u ../../../code/main.py | tee pl.out
-```
 
 -----------------------------------
 Note from newer version:

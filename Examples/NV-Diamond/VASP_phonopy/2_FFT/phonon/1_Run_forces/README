@@ -1,0 +1,2 @@
+1. require an origin POSCAR from relaxed system;
+2. run phonopy to generate displacement POSCAR

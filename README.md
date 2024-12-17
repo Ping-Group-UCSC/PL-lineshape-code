@@ -12,6 +12,9 @@ For citation of this code, you can cite:
 [Kejun Li, Tyler J. Smart, and Yuan Ping,  *Phys. Rev. Materials* **6**, L042201, (2022).](https://journals.aps.org/prmaterials/abstract/10.1103/PhysRevMaterials.6.L042201
 "Carbon trimer as a 2 eV single-photon emitter candidate in hexagonal boron nitride: A first-principles study")
 
+Acknowledgement
+We ackowlege the help from Jaewood Lee and Professor Hoseong Seo's group for their attribution to the further development of the code. 
+
 Prerequisites:
 ------------------------------------
 * [Python](https://www.python.org/downloads)
@@ -34,3 +37,5 @@ Tyler J. Smart
 Kejun Li
 
 Shimin Zhang
+
+Jaewood Lee
